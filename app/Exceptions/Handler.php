@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -37,5 +39,18 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function render($request, Throwable $exception)
+    {
+        // if your api client has the correct content-type this expectsJson() 
+        // should work. if not you may use $request->is('/api/*') to match the url.
+
+        if ($exception instanceof AuthenticationException) {
+
+            return response()->json($exception->getMessage(), 401);
+        }
+
+        return parent::render($request, $exception);
     }
 }
