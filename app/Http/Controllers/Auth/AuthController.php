@@ -6,10 +6,13 @@ use Exception;
 use App\Models\User;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
+use App\Services\AuthService;
+use App\Models\Account\Account;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use App\Http\Requests\LoginRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
-use Illuminate\Support\Facades\Validator;
 use App\Notifications\RegisterNotification;
 
 class AuthController extends Controller
@@ -48,8 +51,11 @@ class AuthController extends Controller
             'email'     => $request->email,
             'password'  => bcrypt($request->password)
         ];
+        DB::beginTransaction();
         try {
-            $user = User::create($payload);
+            $user = AuthService::register($payload);
+            DB::commit();
+            // Notify the user that
             $user->notify(new RegisterNotification());
             return $this->successResponse([
                 'message' => 'User successfully registered',

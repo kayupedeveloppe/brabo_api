@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Password\PasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,4 +31,13 @@ Route::group([
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/user-profile', [AuthController::class, 'userProfile']);
+});
+/*
+=========  PASSwORD MODULE
+*/
+Route::group([
+    'prefix' => 'password'
+], function ($router) {
+    Route::post('reset', [PasswordController::class, 'reset'])->name('password.reset');
+    Route::post('forgot', [PasswordController::class, 'forgot']);
 });
