@@ -1,11 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
+use App\Models\AbsencePlan;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAccountsTable extends Migration
+class CreateAbsencePlansTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,11 @@ class CreateAccountsTable extends Migration
      */
     public function up()
     {
-        Schema::create('accounts', function (Blueprint $table) {
+        Schema::create('absence_plans', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->nullable();
+            $table->enum('status', [AbsencePlan::INACTIVE, AbsencePlan::ACTIVE])->default(AbsencePlan::ACTIVE);
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
@@ -28,8 +30,6 @@ class CreateAccountsTable extends Migration
      */
     public function down()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
-        Schema::dropIfExists('accounts');
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+        Schema::dropIfExists('absence_plans');
     }
 }

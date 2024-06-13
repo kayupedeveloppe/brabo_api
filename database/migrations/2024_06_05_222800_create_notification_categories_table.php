@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddAccountIdUsersTable extends Migration
+class CreateNotificationCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,13 @@ class AddAccountIdUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->unsignedBigInteger('account_id')->nullable()->after('id');
+        Schema::create('notification_categories', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('account_id')->nullable();
+            $table->string('name')->nullable();
+            $table->text('fields')->nullable();
+            $table->timestamps();
+
             $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
         });
     }
@@ -26,9 +31,6 @@ class AddAccountIdUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign('users_account_id_foreign');
-            $table->dropColumn('account_id');
-        });
+        Schema::dropIfExists('notification_categories');
     }
 }

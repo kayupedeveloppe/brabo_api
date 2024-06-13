@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddAccountIdUsersTable extends Migration
+class AddAccountIdInNotificationContents extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddAccountIdUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->unsignedBigInteger('account_id')->nullable()->after('id');
+        Schema::table('notification_contents', function (Blueprint $table) {
+            $table->unsignedBigInteger('account_id')->after('id')->nullable();
             $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
         });
     }
@@ -26,8 +26,8 @@ class AddAccountIdUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign('users_account_id_foreign');
+        Schema::table('notification_contents', function (Blueprint $table) {
+            $table->dropForeign(['account_id']);
             $table->dropColumn('account_id');
         });
     }
